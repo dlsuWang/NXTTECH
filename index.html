@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+	<meta charset="utf-8"/>
+		<title>
+			Voltes V
+		</title>
+
+		<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+
+		<script>
+		  // Initialize Firebase
+		  var config = {
+			apiKey: "AIzaSyAD5LEi1srlvvmAMuBBZ5llYvuNjMaeq4A",
+			authDomain: "nxttech-e2ff2.firebaseapp.com",
+			databaseURL: "https://nxttech-e2ff2.firebaseio.com",
+			projectId: "nxttech-e2ff2",
+			storageBucket: "nxttech-e2ff2.appspot.com",
+			messagingSenderId: "591776999891"
+		  };
+		  firebase.initializeApp(config);
+		</script>
+
+		<script src="js/db_api.js">	</script>
+			
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+		<style type="text/css">
+			html, body{
+				height: 100%;
+			}
+
+			.marginTop3Percent{
+				margin-top: 3%;
+			}			
+
+			.marginTop1Percent{
+				margin-top: 1%;
+			}	
+
+			.bgColor{
+				background-image: url(lobbyBg.jpg);
+				background-size: 100% 100%;
+				background-repeat: no-repeat;
+			}
+
+			.buttonColorGreen{
+				background-color: #89f785;
+			}
+
+			.preserveWhiteSpace{
+				white-space: pre;
+			}
+
+			.formBox{
+				background: rgba(255, 255, 255, 0.8);
+			}
+
+			.solidColor{
+				opacity: 1.0;
+			}
+
+			.btn-default,
+			.btn-primary,
+			.btn-success,
+			.btn-info,
+			.btn-warning,
+			.btn-danger {
+			    -webkit-box-shadow: 0px 3px 0px rgba(0, 0, 0, 0.3);
+			    -moz-box-shadow:    0px 3px 0px rgba(0, 0, 0, 0.3);
+			    box-shadow:         0px 3px 0px rgba(0, 0, 0, 0.3);
+			}
+
+			.btn-default:active,
+			.btn-primary:active,
+			.btn-success:active,
+			.btn-info:active,
+			.btn-warning:active,
+			.btn-danger:active {
+			    margin-top: 3px;
+			    margin-bottom: -3px;
+			}
+
+			#lobbyCode{
+				white-space: pre;
+				width: 400px;
+				text-align: left;
+			}
+			
+			@media only screen and (max-width: 1000px) {
+			   	.formBox{
+			   		margin-top: 250px;
+			   		width: 100%;
+			   		font-size: 3em;
+			   	}
+
+			   	#lobbyCode, #codeInput{
+			   		height: 5em;
+			   		width: 10em;
+			   		font-size: 50px;
+			   	}
+
+			   	#createLobbyButton, #joinButton{
+			   		height: 5em;
+			   		width: 7em;
+			   		font-size: 50px;		   		
+			   	}
+			}
+		</style>
+
+		<script type="text/javascript">
+			$(document).ready(function(){
+				$("#codeInput").width($("#lobbyCode").width());
+				$("#joinButton").width($("#createLobbyButton").width());
+
+				$(window).resize(function(){ 
+					$("#codeInput").width($("#lobbyCode").width());
+					$("#joinButton").width($("#createLobbyButton").width());
+			    });  
+			}) 
+		</script>
+	</head>
+	
+	<body class="bgColor">
+		<!-- AUDIO START -->
+		<audio id="BGMplayer" autoplay loop>
+			<source src="lobbyBgm.mp3" type="audio/mpeg"">
+		</audio>
+		<!-- AUDIO END -->
+
+		<div class="container marginTop3Percent well well-sm formBox">
+			<div class="row">
+				<div class="form-inline">
+					<center>
+						<div class="form-group">
+							<div id="lobbyCode" class="form-control">Lobby Code:                     </div>
+							<button id="createLobbyButton" class="btn btn-default " onclick="createLobby()">Create Lobby</button>
+						</div>
+					</center>
+				</div>
+			</div>
+
+			<div class="row marginTop1Percent">
+				<div class="form-inline">
+					<center>
+						<div class="form-group">
+							<input id="codeInput" type="text" class="form-control"></input>
+							<button id="joinButton" onclick="read()" class="btn btn-default ">Join</button>
+						</div>
+					</center>
+				</div>
+			</div>
+
+			<div class="row">
+				<center>
+					<div><span id="waitingforplayers" class="">Waiting for players: 0/5</span></div>
+				</center>
+			</div>
+		</div>
+	</body>
+</html>

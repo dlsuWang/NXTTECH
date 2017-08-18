@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!-- FIREBASE INIT HERE -->
+	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyAD5LEi1srlvvmAMuBBZ5llYvuNjMaeq4A",
+		authDomain: "nxttech-e2ff2.firebaseapp.com",
+		databaseURL: "https://nxttech-e2ff2.firebaseio.com",
+		projectId: "nxttech-e2ff2",
+		storageBucket: "nxttech-e2ff2.appspot.com",
+		messagingSenderId: "591776999891"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+
+		
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		html, body{
+			height: 100%;
+		}
+
+		#myBar {
+			width: 0%;
+			background-color: #3267BC;
+		}
+
+		.dynamicBar{
+			height: 30px;
+			text-align: center;
+			line-height: 30px;	
+		}
+
+		.playButtonSize{
+			height: 10em;
+			width: 8em;
+		}
+
+		.paddingTop3Percent{
+			padding-top: 3%;
+		}
+
+		.bgImage{
+			content: url(VVBG.png);
+			height: 100%;
+			width: 100%;
+		}
+
+		.buttonContainer{
+			height: auto;
+			width: auto;
+			position: absolute;
+			margin: 0;
+			left:0;
+			top:0;
+		}
+
+		.timerNum{
+			height: auto;
+			width: auto;
+			position: absolute;
+			margin: 0;
+			left:0;
+			top:0;			
+		}
+
+		.colorTextGen{
+			height: auto;
+			width: auto;
+			position: absolute;
+			margin: 0;
+			left:0;
+			top:0;	
+
+			font-size: 2em;
+			text-align: center;  
+			font-weight: bold;
+			background-color: #cccccc;
+			border-style: solid;
+		}		
+
+		.progressBar{
+			height: auto;
+			width: auto;
+			position: absolute;
+			margin: 0;
+			left:0;
+			top:0;	
+
+			width: 12%;
+			background-color: #ddd;			
+		}
+
+		.score{
+			height: auto;
+			width: auto;
+			position: absolute;
+			margin: 0;
+			left:0;
+			top:0;	
+
+			font-size: 2em;
+			background-color: #cccccc;
+			border-style: solid;
+		}
+
+		@media only screen and (max-width: 1000px) {
+		    .bgImage{
+				content: url(MVVBG.png);
+				height: 100%;
+				width: 100%;
+		    }
+
+		    .playButtonSize{
+				height: 15em;
+				width: 15em;		    	
+		    }
+
+		    .colorTextGen{
+				font-size: 4em;
+		    }
+
+		    .timerNum{
+		    	font-size: 5em;
+		    }
+
+		    .progressBar{
+		    	width: 70%;
+		    }
+		}
+	</style>
+
+	<audio oncanplaythrough="myOnCanPlayFunction()" id="BGMplayer">
+		<source src="bgm.mp4" type="audio/mpeg"">
+	</audio>
+
+	<script>	  
+		var width = 0;
+		var colors = ["RED","BLUE","GREEN","YELLOW"];
+		var count = 7;
+		var lives = 3;
+		var rand;
+		var rand2;
+		var answer;
+		var counter;
+
+		/*****************NEW CODE SCORING******************/
+		var BASE_SCORE = 100;
+		var score = 0;
+		var chain = 0;
+		var isChain = false;
+		var isClear = false;
+
+		function chainUpdate(){ 
+			if (isChain) {//if player is correct several times in a row
+				chain++; //yes *1 pa rin after 2nd consecutive correct pero *2 score sa 3rd consecutive correct
+				score += BASE_SCORE * chain;
+			} else {//if player is correct for the first time or since last wrong
+				score += BASE_SCORE;
+				isChain = true;
+			}
+
+			updateScore();
+		}
+
+		function chainReset(){
+			isChain = false;
+			chain = 0;
+		}
+
+		function updateScore(){
+			$("#scoreDiv").html("Score: <br>" + score);
+		}
+
+		function finalizeScore(){
+			if(count > 0){
+				console.log("count: " + count);
+				score = score * count;
+			}
+		}
+		/*****************NEW CODE SCORING******************/
+
+		function myOnCanPlayFunction(){ 
+			console.log('Can play'); 
+			$( "#playBTN" ).removeClass("disabled");
+		}
+
+		function playGame(){
+			$('#BGMplayer')[0].play();
+
+			$(".playButtonSize").prop("disabled", false);
+
+			counter=setInterval(timer, 1000); //1000 will  run it every 1 second
+			singleIteration();
+		}
+
+		function move() {
+		 	width+=10;
+		 	console.log("width" + width);
+		    $("#myBar").css("width", ((width / 70 * 100) + "%"));
+		}
+
+		function singleIteration(){
+			rand = Math.floor((Math.random() * 4) + 1);
+		    rand2 = Math.floor((Math.random() * 4) + 1);
+		    answer = colors[rand-1];
+
+			$("#randomTextContainer").html(colors[rand-1]);
+			$("#randomTextContainer").css("color", colors[rand2-1]);
+		}
+
+		function timer(){
+			count = count - 1;
+
+			if (count <= 0){
+				gameLose();
+				$("#timer").html(count); // watch for spelling
+				return;
+			}
+
+			$("#timer").html(count); // watch for spelling
+		}	
+
+
+		function check(bcolor){
+			if(bcolor == answer){
+				console.log("correct " + bcolor + " " + document.getElementById("randomTextContainer").style.color);
+
+				chainUpdate();//<------------NEW CODE SCORING------------------
+
+				singleIteration();
+				move();
+			}else{
+				console.log("wrong " + bcolor + " " + document.getElementById("randomTextContainer").style.color);
+				
+				chainReset();//<------------NEW CODE SCORING------------------
+
+				lives--;
+			}
+
+			checkWin();
+		}
+
+		function checkWin(){
+			if (width == 70) {
+				gameWin();
+			}
+
+			if (lives == 0) {
+				gameLose();
+			}
+		}
+
+		function getScore(){
+			return score;
+		}
+
+		function getIsClear(){
+			return isClear;
+		}
+
+		function gameWin(){
+			$("#modalBody").html("You Win!");
+			isClear = true;
+
+			gameOver();
+		}
+
+		function gameLose(){
+			$("#modalBody").html("You Lose!");
+			gameOver();
+		}
+
+		function gameOver(){
+			clearInterval(counter);
+
+			// $('#BGMplayer')[0].pause();
+			$("#modalBody").css("text-align", "center");
+			$("#modalBody").css("font-size", "500%");		
+
+			finalizeScore();
+
+			// console.log("score: " + getScore());
+			// console.log("isClear: " + getIsClear());
+
+			
+			var lobbyCode = localStorage.getItem("lobbyCode");
+			var username = localStorage.getItem("username");
+			
+			var ref = firebase.database().ref(lobbyCode);
+			//ref.on('value', function(snapshot) {});
+			
+			//UPDATE DATABASE
+			ref.once('value').then(function(snapshot) {
+
+				//get count
+				var count = 0;		
+
+				for(var i=0; i < snapshot.numChildren(); i++)
+				{
+					var name = snapshot.child(i+1 + '/username').val();
+					if(name == username)
+					{
+						count = i+1;
+					}
+				}
+				
+				var updates = {};
+				
+				//Update isCleared
+				if(isClear)
+				{
+					updates[lobbyCode + '/' + count + '/isCleared'] = "true";
+				}
+				else
+				{
+					updates[lobbyCode + '/' + count + '/isCleared'] = "false";
+				}
+				
+				
+				//Update score 
+				updates[lobbyCode + '/' + count + '/score'] = score.toString();
+				firebase.database().ref().update(updates);
+			
+			});
+			
+			//check if all player finished the game
+			ref.on('value', function(snapshot) {
+				var end = 0;
+				var victory = true;
+				
+				for(var i=0; i < snapshot.numChildren(); i++)
+				{
+					var stats = snapshot.child(i+1 + '/isCleared').val();
+					if(stats != "unknown")
+					{
+						if(stats == "false")
+						{
+							victory = false;
+						}
+						
+						end = end + 1;
+					}
+				}
+				
+				if(end == 5)
+				{
+					//check if win or lose
+					if(victory)
+					{
+						//redirect to victory page
+						window.location.href = "victory.html";
+					}
+					else
+					{
+						//redirect to defeat page
+						window.location.href = "defeat.html";
+					}
+				}
+				
+				
+			});
+			
+
+			
+			$("#modalBody").append("<br>Final Score: " + score);
+			$("#gameOverModal").modal({backdrop: 'static', keyboard: false});
+		}
+
+		/*****************NEW CODE POSITION ELEMENTS******************/
+		function initBG(windowHeight, windowWidth){
+			$(".bgImage").css("background-size", windowWidth + "px " + windowHeight + "px");
+
+			// console.log("wHeight: " + windowHeight);
+			// console.log("wWidth: " + windowWidth);
+		}
+
+		function positionButtons(windowHeight, windowWidth, byHeight, byWidth){
+			$("#buttonInputGroup").css("top", (windowHeight - $("#buttonInputGroup").height()) / byHeight + "px");
+			$("#buttonInputGroup").css("left", (windowWidth - $("#buttonInputGroup").width()) / byWidth + "px");
+		}
+
+		function positionTimer(windowHeight, windowWidth, byHeight, byWidth){
+			$("#timer").css("top", (windowHeight - $("#timer").height()) / byHeight  + "px");
+			$("#timer").css("left", (windowWidth - $("#timer").width()) / byWidth  + "px");				
+		}
+
+		function positionProgressBar(windowHeight, windowWidth, byHeight, byWidth){
+			$("#myProgress").css("top", (windowHeight - $("#myProgress").height()) / byHeight  + "px");
+			$("#myProgress").css("left", (windowWidth - $("#myProgress").width()) / byWidth  + "px");				
+		}
+
+		function positionColorTextGen(windowHeight, windowWidth, byHeight, byWidth){
+			$("#randomTextContainer").css("top", (windowHeight - $("#randomTextContainer").height()) / byHeight + "px");
+			$("#randomTextContainer").css("left", (windowWidth - $("#randomTextContainer").width()) / byWidth  + "px");								
+		}
+
+		function positionScore(windowHeight, windowWidth, byHeight, byWidth){
+			$("#scoreDiv").css("top", (windowHeight - $("#scoreDiv").height()) / byHeight + "px");
+			$("#scoreDiv").css("left", (windowWidth - $("#scoreDiv").width()) / byWidth  + "px");								
+		}
+
+		$(document).ready(function(){
+			var windowHeight = $(window).height();
+			var windowWidth = $(window).width();
+
+			if (windowWidth >= 1000) {
+				// initBG(windowHeight, windowWidth);
+			    positionButtons(windowHeight, windowWidth, 1.95, 2);
+			    positionTimer(windowHeight, windowWidth, 10, 2);
+			    positionProgressBar(windowHeight, windowWidth, 1.9, 4.3);
+			    positionColorTextGen(windowHeight, windowWidth, 3.8, 2);
+			    positionScore(windowHeight, windowWidth, 1.9, 1.35);
+			} else {
+			    positionButtons(windowHeight, windowWidth, 1.3, 2);
+			    positionTimer(windowHeight, windowWidth, 3.2, 2);
+			    positionProgressBar(windowHeight, windowWidth, 2.15, 2);
+			    positionColorTextGen(windowHeight, windowWidth, 2.4, 2);
+			    positionScore(windowHeight, windowWidth, 1.9, 1.35);
+			}
+
+		    $(window).resize(function(){ // whatever the screen size this
+				windowHeight = $(window).height();
+				windowWidth = $(window).width();
+
+				if(windowWidth >= 1000){
+					// initBG(windowHeight, windowWidth);
+				    positionButtons(windowHeight, windowWidth, 1.95, 2);
+				    positionTimer(windowHeight, windowWidth, 10, 2);
+				    positionProgressBar(windowHeight, windowWidth, 1.9, 4.3);
+				    positionColorTextGen(windowHeight, windowWidth, 3.8, 2);
+				    positionScore(windowHeight, windowWidth, 1.9, 1.35);
+				} else {					
+				    positionButtons(windowHeight, windowWidth, 1.3, 2);
+				    positionTimer(windowHeight, windowWidth, 3.2, 2);
+				    positionProgressBar(windowHeight, windowWidth, 2.15, 2);
+				    positionColorTextGen(windowHeight, windowWidth, 2.4, 2);
+			    	positionScore(windowHeight, windowWidth, 1.9, 1.35);
+				}
+
+				console.log("windowWidth: " + windowWidth);
+		    });    
+
+		    playGame();
+		});
+		/*****************NEW CODE POSITION ELEMENTS******************/
+	</script>
+
+	<title>Voltes V Game</title>
+</head>
+<body class="">
+
+	<img class="bgImage">
+	<!-- PLAY BUTTON START-->
+	<!--button type="button" class="btn btn-primary btn-lg disabled" id="playBTN" onclick="playGame()">PLAY</button-->
+
+	<br>
+	<br>
+	<!-- PLAY BUTTON END-->
+
+	<div id="myProgress" class="progressBar">
+		<div id="myBar" class="dynamicBar"></div>
+	</div>
+
+	<h1 id="timer" class="timerNum">
+		7
+	</h1>
+
+	<div id="randomTextContainer" class="colorTextGen">
+		Ready
+	</div>
+
+	<h1 id="scoreDiv" class="score">
+		Score: <br> 0
+	</h1>
+
+	<div id="buttonInputGroup" class="buttonContainer">
+		<center>
+			<div class="col-sm-6" align="right">
+				<button type="button btn-lg" class="btn btn-primary playButtonSize" id="BLUE" onclick="check(this.id)" disabled="true"></button>
+			</div>
+			<div class="col-sm-6" align="left">
+				<button type="button btn-lg" class="btn btn-danger playButtonSize" id="RED" onclick="check(this.id)" disabled="true"></button>
+			</div>
+			<div class="col-sm-6 paddingTop3Percent" align="right">
+				<button type="button btn-lg" class="btn btn-warning playButtonSize" id="YELLOW" onclick="check(this.id)" disabled="true"></button>
+			</div>
+			<div class="col-sm-6 paddingTop3Percent" align="left">
+				<button type="button btn-lg" class="btn btn-success playButtonSize" id="GREEN" onclick="check(this.id)" disabled="true"></button>
+			</div>
+		</center>				
+	</div>
+
+	<div id="gameOverModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<!--div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Modal Header</h4>
+				</div-->
+				<div id="modalBody" class="modal-body">
+
+				</div>
+				<div class="modal-footer">
+					<center>
+						<img src="loadingGIF.gif">
+					</center>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+</body>
+</html>

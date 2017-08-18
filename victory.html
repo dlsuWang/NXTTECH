@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Voltes V Game</title>
+	<!-- FIREBASE INIT HERE -->
+	<script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
+
+	<script>
+	  // Initialize Firebase
+	  var config = {
+		apiKey: "AIzaSyAD5LEi1srlvvmAMuBBZ5llYvuNjMaeq4A",
+		authDomain: "nxttech-e2ff2.firebaseapp.com",
+		databaseURL: "https://nxttech-e2ff2.firebaseio.com",
+		projectId: "nxttech-e2ff2",
+		storageBucket: "nxttech-e2ff2.appspot.com",
+		messagingSenderId: "591776999891"
+	  };
+	  firebase.initializeApp(config);
+	</script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<link href="css/bootstrap.min.css" rel="stylesheet">
+
+	<style type="text/css">
+			html, body{
+				height: 100%;
+			}
+
+			.bgImage{		
+				background-image: url(resultBG.jpg);
+				background-repeat: no-repeat;
+				background-size: 100% 100%;
+				height: 100%;
+				width: 100%;
+			}
+
+			.btn-default,
+			.btn-primary,
+			.btn-success,
+			.btn-info,
+			.btn-warning,
+			.btn-danger {
+			    -webkit-box-shadow: 0px 3px 0px rgba(0, 0, 0, 0.3);
+			    -moz-box-shadow:    0px 3px 0px rgba(0, 0, 0, 0.3);
+			    box-shadow:         0px 3px 0px rgba(0, 0, 0, 0.3);
+			}
+
+			.btn-default:active,
+			.btn-primary:active,
+			.btn-success:active,
+			.btn-info:active,
+			.btn-warning:active,
+			.btn-danger:active {
+			    margin-top: 3px;
+			    margin-bottom: -3px;
+			}
+
+			.videoCss{
+				height: 700px;
+				width: 700px;
+			}
+
+			.tableCss{
+				font-weight: bold;
+			}
+
+			.tableHeaderCss{
+				font-size: 30px;
+			}
+
+			.tableValueCss{
+				font-size: 20px;
+			}
+
+			.whiteContainerColor{
+				background: rgba(255, 255, 255, 0.6);
+				height: 100%;
+			}
+
+			@media only screen and (max-width: 1000px) {
+			    .videoCss{
+					margin-top: 150px;
+			    }
+
+				.tableCss{
+					font-weight: bold;
+				}
+
+				.tableHeaderCss{
+					font-size: 50px;
+				}
+
+				.tableValueCss{
+					font-size: 40px;
+				}
+
+			    #homeButton{
+			    	font-size: 5em;
+			    }
+			}
+	</style>
+
+	<script type="text/javascript">
+	
+		var lobbyCode = localStorage.getItem("lobbyCode");
+		var ref = firebase.database().ref(lobbyCode);
+		ref.once('value').then(function(snapshot) {
+			for(var i=0; i < snapshot.numChildren(); i++)
+			{
+				//var stats = snapshot.child(i+1 + '/isCleared').val();
+				var name = snapshot.child(i+1 + '/username').val();
+				var player_id = "player"+i+"Name";
+				document.getElementById(player_id).innerHTML = name;	
+				var player_clear = "player"+i+"isClear";
+				
+				document.getElementById(player_clear).innerHTML = "pass";
+				
+				
+			}
+		});
+			
+		
+		$(document).ready(function(){
+			document.getElementById('myVideo').addEventListener('ended', endHandler, false);
+
+		    function endHandler(e) {
+		    	var replace = 
+		    		'<center>' + 
+		    		'<img src="victoryImage.png" class="videoCss">' +
+		    		'</center>';
+
+		        $("#videoDiv").html(replace);
+		    }
+
+			var videoFilename = "victoryVidShort.mp4"; //ganito format ng filename. use MP4
+
+			//somehow set MP4 filename here from firebase kc manggaling sa firebase ung prompt since siya lng nakakaalam kung cno pumasa o hinde dba?
+
+			$("#videoDiv video source").attr("src", videoFilename); //change ng source
+			$("#videoDiv video")[0].load();//change the video that is playing using the source
+		});
+	</script>
+</head>
+<body class="bgImage">
+	<div class="container whiteContainerColor">
+		<div id="videoDiv" class="row">
+			<center>
+				<video id="myVideo" class="videoCss" autoplay>
+					<source type="video/mp4"> 
+				</video>
+			</center>
+		</div>
+
+		<div class="row tableCss">
+			<center>
+				<div id="headerName" class="col-sm-6 tableHeaderCss">
+					Name
+				</div>
+				<div id="headerIsClear" class="col-sm-6 tableHeaderCss">
+					Result
+				</div>
+				<div id="player0Name" class="col-sm-6 tableValueCss">
+					Alpha
+				</div>
+				<div id="player0isClear" class="col-sm-6 tableValueCss">
+					Pass
+				</div>
+				<div id="player1Name" class="col-sm-6 tableValueCss">
+					Beta
+				</div>
+				<div id="player1isClear" class="col-sm-6 tableValueCss">
+					Fail
+				</div>
+				<div id="player2Name" class="col-sm-6 tableValueCss">
+					Gamma
+				</div>
+				<div id="player2isClear" class="col-sm-6 tableValueCss">
+					Fail
+				</div>
+				<div id="player3Name" class="col-sm-6 tableValueCss">
+					Omega
+				</div>
+				<div id="player3isClear" class="col-sm-6 tableValueCss">
+					Pass
+				</div>
+				<div id="player4Name" class="col-sm-6 tableValueCss">
+					Sigma
+				</div>
+				<div id="player4isClear" class="col-sm-6 tableValueCss">
+					Pass
+				</div>
+			</center>
+		</div>
+
+		<br>
+
+		<div class="row">
+			<center>
+				<a id="homeButton" href="https://nxttech-e2ff2.firebaseapp.com/" class="btn btn-default">PLAY AGAIN</a>
+			</center>
+		</div>
+	</div>
+</body>
+</html>
