@@ -28,7 +28,7 @@
 			}
 
 			.bgImage{		
-				background-image: url(resultBG.jpg);
+				background-image: url(img/resultBG.jpg);
 				background-repeat: no-repeat;
 				background-size: 100% 100%;
 				height: 100%;
@@ -133,12 +133,11 @@
 		        $("#videoDiv").html(replace);
 		    }
 
-			var videoFilename = "victoryVidShort.mp4"; //ganito format ng filename. use MP4
+		    //In case we need to input video dynamically
+			// var videoFilename = "video/victoryVidShort.mp4"; //filename1
 
-			//somehow set MP4 filename here from firebase kc manggaling sa firebase ung prompt since siya lng nakakaalam kung cno pumasa o hinde dba?
-
-			$("#videoDiv video source").attr("src", videoFilename); //change ng source
-			$("#videoDiv video")[0].load();//change the video that is playing using the source
+			// $("#videoDiv video source").attr("src", videoFilename); //change the source
+			// $("#videoDiv video")[0].load(); //change the video that is playing using the source
 		});
 	</script>
 </head>
@@ -147,7 +146,7 @@
 		<div id="videoDiv" class="row">
 			<center>
 				<video id="myVideo" class="videoCss" autoplay>
-					<source type="video/mp4"> 
+					<source src="video/victoryVidShort.mp4" type="video/mp4"> 
 				</video>
 			</center>
 		</div>
