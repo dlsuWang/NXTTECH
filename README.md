@@ -9,7 +9,7 @@ Multiplayer Volt-in Simulator with Firebase is a 5-player web app game. Each pla
 5. Click on "Add project", name it anything you like, select your coutry/region, and click "Create Project";
 6. It should redirect you to the project's page. Click on "Add Firebase to your Web App";
 7. Click on "Copy" to copy the whole thing there.
-8. As for the first ```<script>``` (the one liner), in index.html, game.html, victory.html, and defeat.html, replace what's in between
+8. As for the first ```<script>``` (the one liner), in index.html, game.html, victory.html, and defeat.html, replace what's in between ```<!-- Firebase Here -->```
 ```
 <!-- Firebase Here -->
 <script src="https://www.gstatic.com/firebasejs/4.2.0/firebase.js"></script>
