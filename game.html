@@ -150,7 +150,7 @@
 		var answer;
 		var counter;
 
-		/*****************NEW CODE SCORING******************/
+		/*****************CODE SCORING******************/
 		var BASE_SCORE = 100;
 		var score = 0;
 		var chain = 0;
@@ -159,7 +159,7 @@
 
 		function chainUpdate(){ 
 			if (isChain) {//if player is correct several times in a row
-				chain++; //yes *1 pa rin after 2nd consecutive correct pero *2 score sa 3rd consecutive correct
+				chain++; //yes it is still *1 on 2nd consecutive input and *2 on third and so on
 				score += BASE_SCORE * chain;
 			} else {//if player is correct for the first time or since last wrong
 				score += BASE_SCORE;
@@ -184,7 +184,7 @@
 				score = score * count;
 			}
 		}
-		/*****************NEW CODE SCORING******************/
+		/*****************CODE SCORING******************/
 
 		function myOnCanPlayFunction(){ 
 			console.log('Can play'); 
@@ -230,16 +230,16 @@
 
 		function check(bcolor){
 			if(bcolor == answer){
-				console.log("correct " + bcolor + " " + document.getElementById("randomTextContainer").style.color);
+				// console.log("correct " + bcolor + " " + document.getElementById("randomTextContainer").style.color);
 
-				chainUpdate();//<------------NEW CODE SCORING------------------
+				chainUpdate();//<------------CODE SCORING------------------
 
 				singleIteration();
 				move();
 			}else{
-				console.log("wrong " + bcolor + " " + document.getElementById("randomTextContainer").style.color);
+				// console.log("wrong " + bcolor + " " + document.getElementById("randomTextContainer").style.color);
 				
-				chainReset();//<------------NEW CODE SCORING------------------
+				chainReset();//<------------CODE SCORING------------------
 
 				lives--;
 			}
