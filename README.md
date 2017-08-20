@@ -1,5 +1,5 @@
 # Multiplayer Volt-in Simulator with Firebase
-Multiplayer Volt-in Simulator with Firebase is a 5-player game. Each player must clear the game before Voltes V's volt-in sequence succeeds.
+Multiplayer Volt-in Simulator with Firebase is a 5-player web app game. Each player must clear the game before Voltes V's volt-in sequence succeeds.
 
 ## Installation
 1. Clone or download the ZIP file;
